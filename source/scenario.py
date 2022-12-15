@@ -15,19 +15,17 @@ class CovidScenario(Scenario):
     def setup_transition_probs(self):
         df = self.get_dataframe(data_info.transition_prob)
         self.transition_probs = {
-            0: {
+            "0": {
                 "s1_s1": df.at[0, "prob_s1_s1"],
                 "s1_s2": df.at[0, "prob_s1_s2"],
                 "s1_s3": df.at[0, "prob_s1_s3"],
             },
-            1: {
+            "1": {
                 "s1_s1": df.at[1, "prob_s1_s1"],
                 "s1_s2": df.at[1, "prob_s1_s2"],
                 "s1_s3": df.at[1, "prob_s1_s3"],
             }
         }
-        # print('initial_probs', self.transition_probs)
 
     def get_transition_probs(self, id_age_group: int):
-        # print(self.transition_probs)
-        return self.transition_probs[id_age_group]
+        return self.transition_probs[str(id_age_group)]
