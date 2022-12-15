@@ -58,19 +58,27 @@ class CovidAnalyzer:
             s0_paths[f"path_{id_path + 1}"] = df_path["s0_mean"].to_numpy()
             infection_prob_paths[f"path_{id_path + 1}"] = df_path["infection_prob_mean"].to_numpy()
 
-        self.plot_paths(paths=s0_paths,
-                        fig_name=f"S0_CS{id_calibrator_scenario}PS{id_calibrator_params_scenario}",
-                        y_limit=(0, 600))
-        self.plot_paths(paths=infection_prob_paths,
-                        fig_name=f"InfectionProbCalibration_CS{id_calibrator_scenario}PS{id_calibrator_params_scenario}",
-                        y_limit=(0, 0.6))
+        self.plot_paths(
+            paths=s0_paths,
+            fig_name=f"S0_CS{id_calibrator_scenario}PS{id_calibrator_params_scenario}",
+            y_label="Count",
+            y_limit=(0, 600)
+        )
+        self.plot_paths(
+            paths=infection_prob_paths,
+            fig_name=f"InfectionProbCalibration_CS{id_calibrator_scenario}PS{id_calibrator_params_scenario}",
+            y_label="Infection Probability",
+            y_limit=(0, 0.6)
+        )
 
-    def plot_paths(self, paths: Dict[str, np.ndarray], fig_name: str, y_limit: tuple):
+    def plot_paths(self, paths: Dict[str, np.ndarray], fig_name: str, y_label: str = None, y_limit: tuple = None):
         figure = plt.figure(figsize=(12, 6))
         ax = figure.add_axes((0.1, 0.1, 0.8, 0.8))
-        ax.set_ylim(y_limit)
-        ax.set_xlabel("Period", fontsize=15)
-        ax.set_ylabel("Count", fontsize=15)
+        if y_limit:
+            ax.set_ylim(y_limit)
+        ax.set_xlabel("Generation", fontsize=15)
+        if y_label:
+            ax.set_ylabel(y_label, fontsize=15)
         x = [i for i in range(0, len(list(paths.values())[0]))]
         for id_path, values in paths.items():
             ax.plot(x, values, label=id_path)
