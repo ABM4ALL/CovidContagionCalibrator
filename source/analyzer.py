@@ -14,14 +14,6 @@ class CovidAnalyzer:
         self.fig_folder = config.output_folder
         self.db = db.create_db_conn(config)
 
-    def save_fig(self, fig, fig_name):
-        fig.savefig(
-            os.path.join(self.fig_folder, fig_name + ".png"),
-            dpi=200,
-            format="PNG",
-        )
-        plt.close(fig)
-
     def plot_health_state_share(self, id_scenario: int = 0, id_run: int = 0):
         df = self.db.read_dataframe("environment_result")
         df = df.loc[(df["id_scenario"] == id_scenario) & (df["id_run"] == id_run)]
@@ -49,6 +41,30 @@ class CovidAnalyzer:
         ax.legend(fontsize=12)
         self.save_fig(figure, f"PopulationInfection_S{id_scenario}R{id_run}")
 
+    def plot_calibration_process(
+            self,
+            id_calibrator_scenario: int = 0,
+            id_calibrator_params_scenario: int = 0,
+    ):
+        calibrator_params_scenarios = self.db.read_dataframe("calibrator_params_scenarios")
+        path_num = calibrator_params_scenarios.at[id_calibrator_scenario, "path_num"]
+        df = self.db.read_dataframe("environment_calibrator_result_cov")
+        df = df.loc[(df["id_calibrator_scenario"] == id_calibrator_scenario) &
+                    (df["id_calibrator_params_scenario"] == id_calibrator_params_scenario)]
+        s0_paths = {}
+        infection_prob_paths = {}
+        for id_path in range(0, path_num):
+            df_path = df.loc[df["id_path"] == id_path]
+            s0_paths[f"path_{id_path + 1}"] = df_path["s0_mean"].to_numpy()
+            infection_prob_paths[f"path_{id_path + 1}"] = df_path["infection_prob_mean"].to_numpy()
+
+        self.plot_paths(paths=s0_paths,
+                        fig_name=f"S0_CS{id_calibrator_scenario}PS{id_calibrator_params_scenario}",
+                        y_limit=(0, 600))
+        self.plot_paths(paths=infection_prob_paths,
+                        fig_name=f"InfectionProbCalibration_CS{id_calibrator_scenario}PS{id_calibrator_params_scenario}",
+                        y_limit=(0, 0.6))
+
     def plot_paths(self, paths: Dict[str, np.ndarray], fig_name: str, y_limit: tuple):
         figure = plt.figure(figsize=(12, 6))
         ax = figure.add_axes((0.1, 0.1, 0.8, 0.8))
@@ -61,32 +77,13 @@ class CovidAnalyzer:
         ax.legend(fontsize=12)
         self.save_fig(figure, fig_name)
 
-    def plot_calibration_process(
-            self,
-            calibrator_id_scenario: int = 0,
-            calibrator_params_id: int = 0,
-    ):
-        calibrator_params_scenarios = self.db.read_dataframe("calibrator_params_scenarios")
-        path_num = calibrator_params_scenarios.at[calibrator_params_id, "path_num"]
-        df = self.db.read_dataframe("environment_calibrator_result_cov")
-        df = df.loc[(df["calibrator_id_scenario"] == calibrator_id_scenario) &
-                    (df["calibrator_params_id"] == calibrator_params_id)]
-
-        s0_paths = {}
-        infection_prob_paths = {}
-        for id_path in range(0, path_num):
-            df_path = df.loc[df["path_id"] == id_path]
-            s0_paths[f"path_{id_path + 1}"] = df_path["s0_mean"].to_numpy()
-            infection_prob_paths[f"path_{id_path + 1}"] = df["infection_prob_mean"].to_numpy()
-
-        self.plot_paths(paths=s0_paths,
-                        fig_name=f"S0_CS{calibrator_id_scenario}PS{calibrator_params_id}",
-                        y_limit=(0, 600))
-        self.plot_paths(paths=infection_prob_paths,
-                        fig_name=f"InfectionProbCalibration_CS{calibrator_id_scenario}PS{calibrator_params_id}",
-                        y_limit=(0, 0.6))
-
-
+    def save_fig(self, fig, fig_name):
+        fig.savefig(
+            os.path.join(self.fig_folder, fig_name + ".png"),
+            dpi=200,
+            format="PNG",
+        )
+        plt.close(fig)
 
 
 
