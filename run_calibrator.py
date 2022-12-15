@@ -9,6 +9,7 @@ if __name__ == "__main__":
         config=config,
         model_cls=CovidModel,
         scenario_cls=CovidScenario,
-        data_loader_cls=CovidDataLoader
+        data_loader_cls=CovidDataLoader,
+        processors=4
     )
     calibrator.run()

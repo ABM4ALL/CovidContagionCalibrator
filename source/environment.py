@@ -25,6 +25,7 @@ class CovidEnvironment(Environment):
             agent.health_state_transition()
 
     def calc_population_infection_state(self, agents: "AgentList[CovidAgent]"):
+        self.setup()
         for agent in agents:
             if agent.health_state == 0:
                 self.s0 += 1

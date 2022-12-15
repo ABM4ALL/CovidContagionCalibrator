@@ -26,6 +26,8 @@ class CovidScenario(Scenario):
                 "s1_s3": df.at[1, "prob_s1_s3"],
             }
         }
+        # print('initial_probs', self.transition_probs)
 
     def get_transition_probs(self, id_age_group: int):
+        # print(self.transition_probs)
         return self.transition_probs[id_age_group]

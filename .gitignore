@@ -130,12 +130,5 @@ dmypy.json
 /data/output/CovidContagion.sqlite
 /data/output/PopulationInfection_S0R0.png
 /data/output/PopulationInfection_S1R0.png
-/.idea/.gitignore
-/.idea/CovidContagion.iml
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/inspectionProfiles/profiles_settings.xml
-/.idea/inspectionProfiles/Project_Default.xml
-/.idea/vcs.xml
 /.melodie/*
-/.idea/CovidContagionCalibrator.iml
+/.idea/*
