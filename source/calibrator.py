@@ -10,5 +10,4 @@ class CovidCalibrator(Calibrator):
         self.add_environment_property("s0")
 
     def distance(self, environment: "CovidEnvironment") -> float:
-        print(f"not_infected = {environment.s0 / environment.scenario.agent_num}")
         return (environment.s0 / environment.scenario.agent_num - 0.5) ** 2

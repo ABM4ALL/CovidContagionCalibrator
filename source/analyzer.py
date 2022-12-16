@@ -60,7 +60,7 @@ class CovidAnalyzer:
 
         self.plot_paths(
             paths=s0_paths,
-            fig_name=f"S0_CS{id_calibrator_scenario}PS{id_calibrator_params_scenario}",
+            fig_name=f"S0Calibration_CS{id_calibrator_scenario}PS{id_calibrator_params_scenario}",
             y_label="Count",
             y_limit=(0, 600)
         )
