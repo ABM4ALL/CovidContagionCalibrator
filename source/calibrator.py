@@ -2,6 +2,7 @@ from Melodie import Calibrator
 
 from source.model import CovidModel
 
+
 class CovidCalibrator(Calibrator):
 
     def setup(self):
