@@ -1,6 +1,6 @@
 from Melodie import Calibrator
 
-from source.environment import CovidEnvironment
+from source.model import CovidModel
 
 
 class CovidCalibrator(Calibrator):
@@ -9,6 +9,5 @@ class CovidCalibrator(Calibrator):
         self.add_scenario_calibrating_property("infection_prob")
         self.add_environment_property("s0")
 
-    def distance(self, environment: "CovidEnvironment") -> float:
-        # print(environment.s0 / environment.scenario.agent_num, environment.s0, environment.scenario.agent_num)
-        return (environment.s0 / environment.scenario.agent_num - 0.25) ** 2
+    def distance(self, model: "CovidModel") -> float:
+        return (model.environment.s0 / model.environment.scenario.agent_num - 0.25) ** 2
