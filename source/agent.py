@@ -24,7 +24,11 @@ class CovidAgent(Agent):
             rand = random.uniform(0, 1)
             if rand <= transition_probs["s1_s1"]:
                 pass
-            elif transition_probs["s1_s1"] < rand <= transition_probs["s1_s1"] + transition_probs["s1_s2"]:
+            elif (
+                transition_probs["s1_s1"]
+                < rand
+                <= transition_probs["s1_s1"] + transition_probs["s1_s2"]
+            ):
                 self.health_state = 2
             else:
                 self.health_state = 3

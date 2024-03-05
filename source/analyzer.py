@@ -9,7 +9,6 @@ from Melodie import db
 
 
 class CovidAnalyzer:
-
     def __init__(self, config: "Config"):
         self.fig_folder = config.output_folder
         self.db = db.create_db_conn(config)
@@ -42,36 +41,48 @@ class CovidAnalyzer:
         self.save_fig(figure, f"PopulationInfection_S{id_scenario}R{id_run}")
 
     def plot_calibration_process(
-            self,
-            id_calibrator_scenario: int = 0,
-            id_calibrator_params_scenario: int = 0,
+        self,
+        id_calibrator_scenario: int = 0,
+        id_calibrator_params_scenario: int = 0,
     ):
-        calibrator_params_scenarios = self.db.read_dataframe("calibrator_params_scenarios")
+        calibrator_params_scenarios = self.db.read_dataframe(
+            "calibrator_params_scenarios"
+        )
         path_num = calibrator_params_scenarios.at[id_calibrator_scenario, "path_num"]
         df = self.db.read_dataframe("environment_calibrator_result_cov")
-        df = df.loc[(df["id_calibrator_scenario"] == id_calibrator_scenario) &
-                    (df["id_calibrator_params_scenario"] == id_calibrator_params_scenario)]
+        df = df.loc[
+            (df["id_calibrator_scenario"] == id_calibrator_scenario)
+            & (df["id_calibrator_params_scenario"] == id_calibrator_params_scenario)
+        ]
         s0_paths = {}
         infection_prob_paths = {}
         for id_path in range(0, path_num):
             df_path = df.loc[df["id_path"] == id_path]
             s0_paths[f"path_{id_path + 1}"] = df_path["s0_mean"].to_numpy()
-            infection_prob_paths[f"path_{id_path + 1}"] = df_path["infection_prob_mean"].to_numpy()
+            infection_prob_paths[f"path_{id_path + 1}"] = df_path[
+                "infection_prob_mean"
+            ].to_numpy()
 
         self.plot_paths(
             paths=s0_paths,
             fig_name=f"S0Calibration_CS{id_calibrator_scenario}PS{id_calibrator_params_scenario}",
             y_label="Count",
-            y_limit=(0, 600)
+            y_limit=(0, 600),
         )
         self.plot_paths(
             paths=infection_prob_paths,
             fig_name=f"InfectionProbCalibration_CS{id_calibrator_scenario}PS{id_calibrator_params_scenario}",
             y_label="Infection Probability",
-            y_limit=(0, 0.6)
+            y_limit=(0, 0.6),
         )
 
-    def plot_paths(self, paths: Dict[str, np.ndarray], fig_name: str, y_label: str = None, y_limit: tuple = None):
+    def plot_paths(
+        self,
+        paths: Dict[str, np.ndarray],
+        fig_name: str,
+        y_label: str = None,
+        y_limit: tuple = None,
+    ):
         figure = plt.figure(figsize=(12, 6))
         ax = figure.add_axes((0.1, 0.1, 0.8, 0.8))
         if y_limit:
@@ -92,12 +103,3 @@ class CovidAnalyzer:
             format="PNG",
         )
         plt.close(fig)
-
-
-
-
-
-
-
-
-

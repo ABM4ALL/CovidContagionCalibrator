@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 
 from Melodie import Model
-from source import data_info
 from source.agent import CovidAgent
 from source.data_collector import CovidDataCollector
 from source.environment import CovidEnvironment
@@ -13,16 +12,19 @@ if TYPE_CHECKING:
 
 class CovidModel(Model):
     scenario: "CovidScenario"
+    environment: CovidEnvironment
 
     def create(self):
-        self.agents: "AgentList[CovidAgent]" = self.create_agent_list(CovidAgent)
+        self.agents: "AgentList[CovidAgent]" = self.create_agent_list(
+            CovidAgent)
         self.environment = self.create_environment(CovidEnvironment)
         self.data_collector = self.create_data_collector(CovidDataCollector)
 
     def setup(self):
+        self.scenario.generate_agent_dataframe()
         self.agents.setup_agents(
             agents_num=self.scenario.agent_num,
-            params_df=self.scenario.get_dataframe(data_info.agent_params),
+            params_df=self.scenario.parameter_agent_params,
         )
 
     def run(self):

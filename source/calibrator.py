@@ -2,8 +2,8 @@ from Melodie import Calibrator
 
 from source.model import CovidModel
 
-class CovidCalibrator(Calibrator):
 
+class CovidCalibrator(Calibrator):
     def setup(self):
         self.add_scenario_calibrating_property("infection_prob")
         self.add_environment_property("s0")

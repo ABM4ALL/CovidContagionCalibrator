@@ -14,7 +14,9 @@ class CovidEnvironment(Environment):
         self.s3 = 0
 
     def agents_infection(self, agents: "AgentList[CovidAgent]"):
-        infection_prob = (self.s1 / self.scenario.agent_num) * self.scenario.infection_prob
+        infection_prob = (
+            self.s1 / self.scenario.agent_num
+        ) * self.scenario.infection_prob
         for agent in agents:
             if agent.health_state == 0:
                 agent.infection(infection_prob)
@@ -35,4 +37,3 @@ class CovidEnvironment(Environment):
                 self.s2 += 1
             else:
                 self.s3 += 1
-
